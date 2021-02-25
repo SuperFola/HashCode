@@ -3,11 +3,12 @@
 
 import hc_parser
 from reporter import reporter
+from hc_short import *
 
 
 @reporter(__file__)
 def run(filename):
-    print(f"Running {__file__} on {filename}...")
+    print(f"Running {fbasename(__file__)} on {filename}...")
 
     out = {}
     data = hc_parser.load(filename)
