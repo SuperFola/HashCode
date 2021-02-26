@@ -13,5 +13,8 @@ def run(filename):
     out = {}
     data = hc_parser.load(filename)
 
-    hc_parser.generate_output(out, filename)
-    return 0
+    # dummy
+    for k, v in data.items():
+        out[k] = v
+
+    return out

@@ -6,7 +6,7 @@ import sys
 import glob
 
 import hc_parser
-from hc_short import *
+from hc_short import G, L, pexist, gob
 
 try:
     import numpy as np
@@ -51,8 +51,8 @@ def main(*args):
 
     # read all .txt files and convert them to python dict, then save that to
     # ./parsed/filename.txt
-    if len(glob.glob("tests/*.txt")) != len(glob.glob("parsed/*.txt")) or \
-        "-f" in args or "--force" in args:
+    if len(gob("tests/*.txt")) != len(gob("parsed/*.txt")
+                                      ) or "-f" in args or "--force" in args:
         # run only if needed
         hc_parser.save_all()
         return 0
@@ -63,11 +63,17 @@ def main(*args):
 
     algo_name = args[0]
     if not pexist(f"{algo_name}.py"):
-        print(f"Couldn't find {algo_name}.py, check that you're in the right folder")
+        print(
+            f"Couldn't find {algo_name}.py, check that you're in the right folder")
         return -1
     exec(f"import {algo_name}", G(), L())
-    for le in args[1:] or "abcdef":
-        exec(f"{algo_name}.run('{le}.txt')", G(), L())
+    func = eval(f"{algo_name}.run", G(), L())
+    for le in (args[1:] or "abcdef"):
+        try:
+            output = func(f"{le}.txt")
+            hc_parser.generate_output(output, f"{le}.txt")
+        except Exception as e:
+            print(f"Error when running {algo_name}({le}): {e}")
 
     return 0
 
