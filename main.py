@@ -5,8 +5,9 @@ import os
 import sys
 import glob
 
-import hc_parser
-from hc_short import G, L, pexist, gob
+from hashcode import hc_parser, G, L, pexist, gob
+from problem import FIELDS, parse_input, generate_output
+
 
 try:
     import numpy as np
@@ -54,7 +55,7 @@ def main(*args):
     if len(gob("tests/*.txt")) != len(gob("parsed/*.txt")
                                       ) or "-f" in args or "--force" in args:
         # run only if needed
-        hc_parser.save_all()
+        hc_parser.save_all(FIELDS, parse_input)
         return 0
 
     if len(args) == 0:
@@ -70,8 +71,10 @@ def main(*args):
     func = eval(f"{algo_name}.run", G(), L())
     for le in (args[1:] or "abcdef"):
         try:
-            output = func(f"{le}.txt")
-            hc_parser.generate_output(output, f"{le}.txt")
+            fname = f"{le}.txt"
+            print(f"Running {algo_name} on {fname}...")
+            output = func(fname, hc_parser.load(fname))
+            hc_parser.generate_output(output, fname, algo_name, generate_output)
         except Exception as e:
             print(f"Error when running {algo_name}({le}): {e}")
 
