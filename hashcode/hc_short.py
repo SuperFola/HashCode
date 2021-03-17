@@ -35,3 +35,9 @@ from copy import deepcopy
 dcopy = deepcopy
 
 rm_eol = lambda s: s.replace('\n', '')
+
+# ensure that a value stays in given bounds
+clamp = lambda val, minval, maxval: max(min(val, maxval), minval)
+
+# given a list of elements, output a dict of element => count
+count_to_dict = lambda lst: {n: lst.count(n) for n in set(lst)}
